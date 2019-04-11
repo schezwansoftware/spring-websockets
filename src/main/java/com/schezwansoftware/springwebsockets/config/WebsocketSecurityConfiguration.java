@@ -19,6 +19,8 @@ public class WebsocketSecurityConfiguration extends AbstractSecurityWebSocketMes
             // (i.e. cannot subscribe to /topic/messages/* to get messages sent to
             // /topic/messages-user<id>)
             .simpDestMatchers("/topic/**").authenticated()
+            .simpDestMatchers("/queue/**").authenticated()
+            .simpDestMatchers("/user/queue/**").authenticated()
             // message types other than MESSAGE and SUBSCRIBE
             .simpTypeMatchers(SimpMessageType.MESSAGE, SimpMessageType.SUBSCRIBE).denyAll()
             // catch all

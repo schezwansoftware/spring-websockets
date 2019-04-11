@@ -1,9 +1,13 @@
 package com.schezwansoftware.springwebsockets.service;
 
 import com.schezwansoftware.springwebsockets.domain.BankAccount;
+import com.schezwansoftware.springwebsockets.domain.User;
 import com.schezwansoftware.springwebsockets.repository.BankAccountRepository;
 import com.schezwansoftware.springwebsockets.service.dto.BankAccountDTO;
 import com.schezwansoftware.springwebsockets.service.mapper.BankAccountMapper;
+import com.schezwansoftware.springwebsockets.web.websocket.NotificationsController;
+import com.schezwansoftware.springwebsockets.web.websocket.dto.NotificationsDTO;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,9 +31,15 @@ public class BankAccountService {
 
     private final BankAccountMapper bankAccountMapper;
 
-    public BankAccountService(BankAccountRepository bankAccountRepository, BankAccountMapper bankAccountMapper) {
+    private final UserService userService;
+
+    private final NotificationsController notificationsController;
+
+    public BankAccountService(BankAccountRepository bankAccountRepository, BankAccountMapper bankAccountMapper, UserService userService, NotificationsController notificationsController) {
         this.bankAccountRepository = bankAccountRepository;
         this.bankAccountMapper = bankAccountMapper;
+        this.userService = userService;
+        this.notificationsController = notificationsController;
     }
 
     /**
@@ -40,8 +50,15 @@ public class BankAccountService {
      */
     public BankAccountDTO save(BankAccountDTO bankAccountDTO) {
         log.debug("Request to save BankAccount : {}", bankAccountDTO);
+        User user = userService.getUserWithAuthorities().get();
+        bankAccountDTO.setUserId(user.getId());
+        bankAccountDTO.setAccountNumber(RandomStringUtils.randomNumeric(12));
         BankAccount bankAccount = bankAccountMapper.toEntity(bankAccountDTO);
         bankAccount = bankAccountRepository.save(bankAccount);
+        NotificationsDTO notificationsDTO = new NotificationsDTO();
+        notificationsDTO.setTitle("A new bank Account has been created");
+        notificationsDTO.setMessage("A new bank account " + bankAccountDTO.getAccountNumber() + " has been created by User " + user.getFirstName());
+        notificationsController.sendNotifications(notificationsDTO, "admin");
         return bankAccountMapper.toDto(bankAccount);
     }
 
@@ -76,6 +93,7 @@ public class BankAccountService {
      * @param id the id of the entity
      */
     public void delete(UUID id) {
-        log.debug("Request to delete BankAccount : {}", id);        bankAccountRepository.deleteById(id);
+        log.debug("Request to delete BankAccount : {}", id);
+        bankAccountRepository.deleteById(id);
     }
 }
