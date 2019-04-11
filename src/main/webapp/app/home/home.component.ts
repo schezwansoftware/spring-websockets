@@ -5,7 +5,6 @@ import { JhiEventManager } from 'ng-jhipster';
 import { LoginModalService, AccountService, Account } from 'app/core';
 import { JhiTrackerService } from '../core/tracker/tracker.service';
 import { NotificationsService } from '../core/tracker/notifications.service';
-
 @Component({
     selector: 'jhi-home',
     templateUrl: './home.component.html',
@@ -29,8 +28,13 @@ export class HomeComponent implements OnInit {
         this.registerAuthenticationSuccess();
         this.notifyService.subscribe();
         this.notifyService.receive().subscribe(res => {
-            // do something with the notification
+            const options = {
+                body: res.message,
+                icon: '../content/images/logo-jhipster.png'
+            };
+            this.notifyService.createNotification(res.title, options).subscribe();
         });
+        this.notifyService.subscribeToNotifications();
     }
 
     registerAuthenticationSuccess() {

@@ -19,6 +19,8 @@ export class NotificationsService {
     listenerObserver: Observer<any>;
     alreadyConnectedOnce = false;
     private subscription: Subscription;
+    private isNotificationSupported: boolean;
+    private notificationAllowed: boolean;
     notificationsSubscriber = null;
 
     connect() {
@@ -69,7 +71,6 @@ export class NotificationsService {
     subscribe() {
         this.connection.then(() => {
             this.subscriber = this.stompClient.subscribe('/user/queue/notify', data => {
-                console.log('here is data ', data);
                 this.listenerObserver.next(JSON.parse(data.body));
             });
         });
@@ -79,13 +80,43 @@ export class NotificationsService {
         return this.listener;
     }
 
-    send(notification: any) {
-        // if (this.stompClient !== null && this.stompClient.connected) {
-        //     this.stompClient.send(
-        //         '/topic/notifications', // destination
-        //         JSON.stringify(notification), // body
-        //         {} // header
-        //     );
-        // }
+    subscribeToNotifications() {
+        this.isNotificationSupported = 'Notification' in window;
+        if (this.isNotificationSupported) {
+            Notification.requestPermission(status => {
+                if (status === 'granted') {
+                    this.notificationAllowed = true;
+                }
+            });
+        }
+    }
+
+    createNotification(title: string, options?: any) {
+        return new Observable(obs => {
+            if (this.notificationAllowed) {
+                const _notify = new Notification(title, options);
+                _notify.onshow = function(e) {
+                    return obs.next({
+                        notification: _notify,
+                        event: e
+                    });
+                };
+                _notify.onclick = function(e) {
+                    return obs.next({
+                        notification: _notify,
+                        event: e
+                    });
+                };
+                _notify.onerror = function(e) {
+                    return obs.error({
+                        notification: _notify,
+                        event: e
+                    });
+                };
+                _notify.onclose = function() {
+                    return obs.complete();
+                };
+            }
+        });
     }
 }
