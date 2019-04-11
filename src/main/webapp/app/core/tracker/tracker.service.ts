@@ -19,6 +19,7 @@ export class JhiTrackerService {
     listenerObserver: Observer<any>;
     alreadyConnectedOnce = false;
     private subscription: Subscription;
+    notificationsSubscriber = null;
 
     constructor(
         private router: Router,
@@ -110,5 +111,13 @@ export class JhiTrackerService {
 
     private createConnection(): Promise<any> {
         return new Promise((resolve, reject) => (this.connectedPromise = resolve));
+    }
+
+    subscribeToNotifications() {
+        this.connection.then(() => {
+            this.notificationsSubscriber = this.stompClient.subscribe('/topic/notifications', data => {
+                this.listenerObserver.next(JSON.parse(data.body));
+            });
+        });
     }
 }

@@ -39,7 +39,7 @@ spring:
             contactPoints: localhost
             protocolVersion: V4
             compression: LZ4
-            keyspaceName: springWebsockets
+            keyspaceName: cdm
     mail:
         host: localhost
         port: 25
