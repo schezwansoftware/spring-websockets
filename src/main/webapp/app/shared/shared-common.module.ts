@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 
-import { SpringWebsocketsSharedLibsModule } from './';
+import { SpringWebsocketsSharedLibsModule, JhiAlertComponent, JhiAlertErrorComponent } from './';
 
 @NgModule({
     imports: [SpringWebsocketsSharedLibsModule],
-    declarations: [],
-    exports: [SpringWebsocketsSharedLibsModule]
+    declarations: [JhiAlertComponent, JhiAlertErrorComponent],
+    exports: [SpringWebsocketsSharedLibsModule, JhiAlertComponent, JhiAlertErrorComponent]
 })
 export class SpringWebsocketsSharedCommonModule {}
