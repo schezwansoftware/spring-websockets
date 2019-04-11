@@ -1,0 +1,35 @@
+{
+    "generator-jhipster": {
+        "promptValues": {
+            "packageName": "com.schezwansoftware.springwebsockets"
+        },
+        "jhipsterVersion": "5.8.1",
+        "applicationType": "monolith",
+        "baseName": "springWebsockets",
+        "packageName": "com.schezwansoftware.springwebsockets",
+        "packageFolder": "com/schezwansoftware/springwebsockets",
+        "serverPort": "8080",
+        "authenticationType": "jwt",
+        "cacheProvider": "no",
+        "enableHibernateCache": false,
+        "websocket": "spring-websocket",
+        "databaseType": "cassandra",
+        "devDatabaseType": "cassandra",
+        "prodDatabaseType": "cassandra",
+        "searchEngine": false,
+        "messageBroker": false,
+        "serviceDiscoveryType": false,
+        "buildTool": "maven",
+        "enableSwaggerCodegen": false,
+        "jwtSecretKey": "OGI3ZjU5NGMzMjM5MTEzYTk2YzUxN2IzOTJhNzQwNTI5ZGMwZTVkYTExZTBjOTBjNGY2MTc5NjcxZTFlMGM1YTFjNDFiM2NkNzcyZTNkNjM5NDEyY2Q5OWUzMzRhMWY2MzQ5OTE1NzhjYzdhMTE1Y2Y0MTUyYzBiMGE3OTJhNDM=",
+        "clientFramework": "angularX",
+        "useSass": false,
+        "clientPackageManager": "npm",
+        "testFrameworks": [],
+        "jhiPrefix": "jhi",
+        "entitySuffix": "",
+        "dtoSuffix": "DTO",
+        "otherModules": [],
+        "enableTranslation": false
+    }
+}
